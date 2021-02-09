@@ -2,7 +2,7 @@ const https = require( 'https' );
 
 // get() function format
 // https.get(URL_String, Callback_Function) {    Action	}
-
+// ***************************** GET REQUEST **************************** 
 // let request = https.get('https://jsonplaceholder.typicode.com/users?_limit=2', (res) => {
 //   if (res.statusCode !== 200) {
 //     console.error(`Did not get an OK from the server. Code: ${res.statusCode}`);
@@ -28,15 +28,14 @@ const https = require( 'https' );
 // reuest() method
 // https.request(URL_String, Options_Object, Callback_Function) {  Action  }
 
-const options = {
-  method: 'GET',
-  host: 'jsonplaceholder.typicode.com',
-  path: '/users?_limit=2',
-  headers: {
-    'Accept': 'application/json'
-  }
-
-};
+// const options = {
+//   method: 'GET',
+//   host: 'jsonplaceholder.typicode.com',
+//   path: '/users?_limit=2',
+//   headers: {
+//     'Accept': 'application/json'
+//   }
+// };
 
 let request = https.request( options,  (res) => {
   if (res.statusCode !== 200) {
@@ -58,3 +57,4 @@ let request = https.request( options,  (res) => {
   request.on('error', (err) => {
     console.error(`Encountered an error trying to make a request: ${err.message}`);
   });
+
