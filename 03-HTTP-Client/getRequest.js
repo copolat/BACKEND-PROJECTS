@@ -29,10 +29,16 @@ const https = require( 'https' );
 // https.request(URL_String, Options_Object, Callback_Function) {  Action  }
 
 const options = {
-  method: 'GET'
+  method: 'GET',
+  host: 'jsonplaceholder.typicode.com',
+  path: '/users?_limit=2',
+  headers: {
+    'Accept': 'application/json'
+  }
+
 };
 
-let request = https.request('https://jsonplaceholder.typicode.com/users?_limit=2', options,  (res) => {
+let request = https.request( options,  (res) => {
   if (res.statusCode !== 200) {
     console.error(`Did not get an OK from the server. Code: ${res.statusCode}`);
     res.resume();
