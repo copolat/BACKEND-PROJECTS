@@ -12,6 +12,7 @@ const authors = JSON.stringify([
 
 const requestListener = function (req, res) {
   res.setHeader("Content-Type", "application/json");
+  //console.log(req)
   switch (req.url) {
     case "/":
       res.writeHead(200);
