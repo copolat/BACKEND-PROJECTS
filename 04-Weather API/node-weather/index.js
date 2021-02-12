@@ -5,7 +5,6 @@ const http = require('http');
 let apiKey=process.env.apiKey;
 const city = 'Mexico City';
 
-
 const form = `<form action='/' method='post'>
 <input type="text" name='city'/> 
 <button type='submit'>Submit</button>  
@@ -24,17 +23,13 @@ const myServer = http.createServer((req, res)=>{
   request(url, function(err, response, body) {
     if (err) {
       console.log('error:', err);
-     
     } else {
       let data = JSON.parse(body);
       console.log('body:', `<h1> Today temprature is ${data.current.temperature} in ${data.location.name}</h1>`);
       res.end( `<h1> Today temprature is ${data.current.temperature} in ${data.location.name}</h1>`);
     }
   });
-
 });
-  
- 
 });
 
 myServer.listen(3000)
