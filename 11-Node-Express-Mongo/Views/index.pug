@@ -1,0 +1,42 @@
+doctype html
+head
+  link(rel="stylesheet", href="styles.css") 
+  meta(charset='UTF-8')
+  title MY APP
+h1  May Node and Express be with you.
+p This is from index.pug 
+form(action='/quotes' method='POST')
+  label(for='name') Name:
+  input(type='text' name='name')
+  br
+  br
+  hr
+  label(for='name') Last Name:
+  input(type='text' name='lastname')
+  br
+  br
+  hr
+  label(for='quote') Quote:
+  input(type='text' name='quote')  
+  br
+  br
+  hr
+  input(type='submit')
+  hr
+  div
+  h2 Writer Quotes!
+  p Replace first chosen quote with a quote written by Writer 
+  button#update-button Replace Quote
+  hr
+  div
+  h2 Delete Writer
+  p Click the button to delete 'Writer' from database 
+  button#delete-button Delete
+  hr
+  h3 
+    each quote in quotes
+      li(style={color: 'coral'})=  'Name: ' + quote.name 
+      li(style={color: 'green'})=  'Last Name: ' + quote.lastname 
+      li(style={color: 'aquamarine'})=  'Quote: ' + quote.quote    
+    // pre=JSON.stringify(quotes, null, 2)  
+script(src="main.js") 
