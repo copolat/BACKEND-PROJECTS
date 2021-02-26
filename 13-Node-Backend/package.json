@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/copolat/BACKEND-PROJECTS/issues"
   },
-  "homepage": "https://github.com/copolat/BACKEND-PROJECTS#readme"
+  "homepage": "https://github.com/copolat/BACKEND-PROJECTS#readme",
+  "dependencies": {
+    "cors": "^2.8.5"
+  }
 }
