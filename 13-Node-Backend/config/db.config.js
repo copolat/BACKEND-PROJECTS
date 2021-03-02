@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://copolat:JDvPpkl8jTuXlrh0@cluster0.nxv3l.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {useNewUrlParser: true}, 
+mongoose.connect('mongodb+srv://copolat:04010072@cluster0.nxv3l.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {useNewUrlParser: true}, 
 	(err) => {
 	if (!err) {
 		console.log('Successfully connected to database... ')
