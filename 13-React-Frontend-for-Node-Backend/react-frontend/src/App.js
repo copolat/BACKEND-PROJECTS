@@ -3,19 +3,25 @@ import Table from "./Table";
 import { Route, Redirect, Switch} from "react-router-dom";
 import Details from "./Details";
 import NotFound from "./NotFound";
+import Login from "./Login";
 
 class App extends Component {
 constructor(props) {
   super(props)
   this.state = {
      users : [],
-     currentUser : {}
+     currentUser : {},
+     token: ''
   }
 }
 
 componentDidMount=()=> {
   console.log("bu didmount başlangıçta state'i güncelliyor")
   this.getCustomer();
+  this.setState({token:this.getToken()});
+  setTimeout(() => {
+    localStorage.clear()
+  }, 100000);
 }
 
 getCustomer = () => {
@@ -59,8 +65,31 @@ updateCustomer = (data ,id) => {
     .then(data => console.log(data))
     .catch(error => console.log(error.message))
 }
+handleDelete = (id) => {
+  fetch(`http://localhost:8000/api/customers/${id}`, { method: 'DELETE' })
+    .then(data => { 
+      console.log(data);
+      this.getCustomer() }
+      )
+    .catch(error => console.log(error.message))
+}
+getToken = () => {
+  const tokenString = localStorage.getItem('token');
+  const userToken = JSON.parse(tokenString);
+  return userToken?.token
+};
+
+
+setToken=(value)=>{
+localStorage.setItem('token', JSON.stringify(value));
+this.setState({token:value})
+}
+
 
     render() {
+      if(!this.state.token) {
+        return <Login setToken={this.setToken} />
+      }
       //console.log(this.state.currentUser)
         return (
             <div className="container text-center">
@@ -68,7 +97,7 @@ updateCustomer = (data ,id) => {
                 
                 <Switch>
                   <Route exact path="/customer" render={(props) => (
-                    <Table {...props} users={this.state.users} currentUser={this.state.currentUser} getOneCustomer={this.getOneCustomer} handleSubmit={this.handleSubmit}/>
+                    <Table {...props} users={this.state.users} currentUser={this.state.currentUser} getOneCustomer={this.getOneCustomer} handleSubmit={this.handleSubmit} handleDelete= {this.handleDelete} />
                     )} />
                   <Redirect exact to="/customer" from="/"></Redirect>
                   <Route path="/customer/:id" render={(props) => (

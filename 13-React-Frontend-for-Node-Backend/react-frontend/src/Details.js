@@ -36,6 +36,7 @@ class Details extends React.Component {
     console.log(this.state);
     this.props.updateCustomer(this.state, id);
     this.setState(this.initialState);
+    window.location='/';
   };
 
   render() {

@@ -21,7 +21,11 @@ app.use(function(req, res, next) {
 
 require("./config/db.config");
 app.use('/api/customers', router);
-
+app.use('/login', (req, res) => {
+  res.send({
+    token: 'test123'
+  });
+});
 app.get('/', (req, res) => res.send('Hello World!'))
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`)) 

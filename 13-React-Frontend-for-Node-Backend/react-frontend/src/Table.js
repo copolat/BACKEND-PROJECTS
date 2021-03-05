@@ -19,6 +19,7 @@ class Table extends Component {
                 <th>Phone</th>
                 <th>City</th>
                 <th>Status</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -38,6 +39,15 @@ class Table extends Component {
                     <td>{item.phone}</td>
                     <td>{item.city}</td>
                     <td>{item.isActive ? "Active" : "Inactive"}</td>
+                    <td>
+                      <button
+                        className="btn btn-remove"
+                        onClick={() => this.props.handleDelete(item.id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+
                   </tr>
                 );
               })}
