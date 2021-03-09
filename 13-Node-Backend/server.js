@@ -1,32 +1,31 @@
-let express=require('express');
-let cors=require('cors');
-let bodyParser=require('body-parser');
-let router = require("./app/routers/db.routers");
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-let app = express();
-let port = 8000;
+const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+var corsOptions = {
+  origin: "http://localhost:3000"
+};
+
+app.use(cors(corsOptions));
+
+// parse requests of content-type - application/json
 app.use(bodyParser.json());
 
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
 
-  
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+// simple route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to bezkoder application." });
 });
-
-
 require("./config/db.config");
-app.use('/api/customers', router);
-app.use('/login', (req, res) => {
-  res.send({
-    token: 'test123'
-  });
+require('./app/routers/auth.routes')(app);
+require('./app/routers/user.routes')(app);
+
+// set port, listen for requests
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
 });
-app.get('/', (req, res) => res.send('Hello World!'))
-
-app.listen(port, () => console.log(`Example app listening on port ${port}!`)) 
-

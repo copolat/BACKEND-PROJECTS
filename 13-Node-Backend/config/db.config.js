@@ -1,9 +1,11 @@
 const mongoose = require('mongoose')
+const initial = require('../app/controllers/role.controller')
 
-mongoose.connect('mongodb+srv://copolat:04010072@cluster0.nxv3l.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {useNewUrlParser: true}, 
+mongoose.connect('mongodb+srv://copolat:04010072@cluster0.nxv3l.mongodb.net/userLogin?retryWrites=true&w=majority', {useNewUrlParser: true}, 
 	(err) => {
 	if (!err) {
 		console.log('Successfully connected to database... ')
+		initial.initial();
 	} else {
 		console.log('An error occured. Details: ' + err)
 	} });

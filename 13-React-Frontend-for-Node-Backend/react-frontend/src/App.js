@@ -1,113 +1,131 @@
-import React, { Component } from 'react';
-import Table from "./Table";
-import { Route, Redirect, Switch} from "react-router-dom";
-import Details from "./Details";
-import NotFound from "./NotFound";
-import Login from "./Login";
+import React, { Component } from "react";
+import { Switch, Route, Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+
+import AuthService from "./services/auth.service";
+
+import Login from "./components/login.component";
+import Register from "./components/register.component";
+import Home from "./components/home.component";
+import Profile from "./components/profile.component";
+import BoardUser from "./components/board-user.component";
+import BoardModerator from "./components/board-moderator.component";
+import BoardAdmin from "./components/board-admin.component";
 
 class App extends Component {
-constructor(props) {
-  super(props)
-  this.state = {
-     users : [],
-     currentUser : {},
-     token: ''
+  constructor(props) {
+    super(props);
+    this.logOut = this.logOut.bind(this);
+
+    this.state = {
+      showModeratorBoard: false,
+      showAdminBoard: false,
+      currentUser: undefined,
+    };
   }
-}
 
-componentDidMount=()=> {
-  console.log("bu didmount başlangıçta state'i güncelliyor")
-  this.getCustomer();
-  this.setState({token:this.getToken()});
-  setTimeout(() => {
-    localStorage.clear()
-  }, 100000);
-}
+  componentDidMount() {
+    const user = AuthService.getCurrentUser();
 
-getCustomer = () => {
-  const url = 'http://localhost:8000/api/customers';
-  fetch(url)
-    .then(result => result.json())
-    .then(data => this.setState({users:data}))
-    .catch(error => console.log(error.message))
-}
+    if (user) {
+      this.setState({
+        currentUser: user,
+        showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
+        showAdminBoard: user.roles.includes("ROLE_ADMIN"),
+      });
+    }
+  }
 
-getOneCustomer = (id) => {
-  console.log("getonecustomer çalıştı")
-  const url = `http://localhost:8000/api/customers/${id}`;
-  fetch(url)
-    .then(result => result.json())
-    .then(data => this.setState({currentUser:data}))
-    .catch(error => console.log(error.message))
-}
+  logOut() {
+    AuthService.logout();
+  }
 
-handleSubmit = (data) => {
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  };
-  fetch('http://localhost:8000/api/customers', requestOptions)
-    .then(response => response.json())
-    .then(data => this.setState({users : [...this.state.users, data]}))
-    .catch(error => console.log(error.message))
-}
+  render() {
+    const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
 
-updateCustomer = (data ,id) => {
-  console.log(data);
-  const requestOptions = {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  };
-  fetch(`http://localhost:8000/api/customers/${id}`, requestOptions)
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.log(error.message))
-}
-handleDelete = (id) => {
-  fetch(`http://localhost:8000/api/customers/${id}`, { method: 'DELETE' })
-    .then(data => { 
-      console.log(data);
-      this.getCustomer() }
-      )
-    .catch(error => console.log(error.message))
-}
-getToken = () => {
-  const tokenString = localStorage.getItem('token');
-  const userToken = JSON.parse(tokenString);
-  return userToken?.token
-};
+    return (
+      <div>
+        <nav className="navbar navbar-expand navbar-dark bg-dark">
+          <Link to={"/"} className="navbar-brand">
+            bezKoder
+          </Link>
+          <div className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <Link to={"/home"} className="nav-link">
+                Home
+              </Link>
+            </li>
 
+            {showModeratorBoard && (
+              <li className="nav-item">
+                <Link to={"/mod"} className="nav-link">
+                  Moderator Board
+                </Link>
+              </li>
+            )}
 
-setToken=(value)=>{
-localStorage.setItem('token', JSON.stringify(value));
-this.setState({token:value})
-}
+            {showAdminBoard && (
+              <li className="nav-item">
+                <Link to={"/admin"} className="nav-link">
+                  Admin Board
+                </Link>
+              </li>
+            )}
 
+            {currentUser && (
+              <li className="nav-item">
+                <Link to={"/user"} className="nav-link">
+                  User
+                </Link>
+              </li>
+            )}
+          </div>
 
-    render() {
-      if(!this.state.token) {
-        return <Login setToken={this.setToken} />
-      }
-      //console.log(this.state.currentUser)
-        return (
-            <div className="container text-center">
-                <h1>React List</h1>
-                
-                <Switch>
-                  <Route exact path="/customer" render={(props) => (
-                    <Table {...props} users={this.state.users} currentUser={this.state.currentUser} getOneCustomer={this.getOneCustomer} handleSubmit={this.handleSubmit} handleDelete= {this.handleDelete} />
-                    )} />
-                  <Redirect exact to="/customer" from="/"></Redirect>
-                  <Route path="/customer/:id" render={(props) => (
-                    <Details {...props} currentUser={this.state.currentUser} updateCustomer={this.updateCustomer} getOneCustomer={this.getOneCustomer}/>
-                    )} />
-                  <Route path="*" component={NotFound} />
-                </Switch>
+          {currentUser ? (
+            <div className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to={"/profile"} className="nav-link">
+                  {currentUser.username}
+                </Link>
+              </li>
+              <li className="nav-item">
+                <a href="/login" className="nav-link" onClick={this.logOut}>
+                  LogOut
+                </a>
+              </li>
             </div>
-        )
-      }
+          ) : (
+            <div className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to={"/login"} className="nav-link">
+                  Login
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link to={"/register"} className="nav-link">
+                  Sign Up
+                </Link>
+              </li>
+            </div>
+          )}
+        </nav>
+
+        <div className="container mt-3">
+          <Switch>
+            <Route exact path={["/", "/home"]} component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/profile" component={Profile} />
+            <Route path="/user" component={BoardUser} />
+            <Route path="/mod" component={BoardModerator} />
+            <Route path="/admin" component={BoardAdmin} />
+          </Switch>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
