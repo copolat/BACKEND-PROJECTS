@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import Table from './Table'
+import Details from './Details'
 
 import AuthService from "./services/auth.service";
 
@@ -22,6 +24,8 @@ class App extends Component {
       showModeratorBoard: false,
       showAdminBoard: false,
       currentUser: undefined,
+      users: [],
+      oneUser: {}
     };
   }
 
@@ -35,10 +39,41 @@ class App extends Component {
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
       });
     }
+    this.getCustomer()
   }
 
   logOut() {
     AuthService.logout();
+  }
+  getCustomer = () => {
+    const url = "http://localhost:8000/api/customers";
+    fetch(url)
+      .then((result) => result.json())
+      .then((data) => this.setState({ users: data }))
+      .catch((error) => console.log(error.message));
+  };
+
+  getOneCustomer = (id) => {
+    console.log("getonecustomer çalıştı")
+    const url = `http://localhost:8000/api/customers/${id}`;
+    fetch(url)
+      .then(result => result.json())
+      .then(data => this.setState({oneUser:data}))
+      .catch(error => console.log(error.message))
+  }
+  
+
+  handleSubmit = (data) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    };
+    fetch('http://localhost:8000/api/customers', requestOptions)
+      .then(response => response.json())
+      .then(data => {console.error(data)
+      this.getCustomer()})
+      .catch(error => console.log(error.message))
   }
 
   render() {
@@ -114,11 +149,25 @@ class App extends Component {
 
         <div className="container mt-3">
           <Switch>
-            <Route exact path={["/", "/home"]} component={Home} />
+            {/* <Route exact path={["/", "/home"]} component={Home} /> */}
+            <Route
+              exact
+              path={["/", "/home"]}
+              render={(props) => <Table {...props} state={this.state} getOneCustomer={this.getOneCustomer}/>}
+            />
+            <Route path="/home/:id" render={(props) => (
+                    <Details {...props} oneUser={this.state.oneUser}   getOneCustomer={this.getOneCustomer}/>
+                    )} />
+
+
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/profile" component={Profile} />
-            <Route path="/user" component={BoardUser} />
+            <Route 
+            exact
+            path="/user"
+            render={(props) => <BoardUser {...props} handleSubmit={this.handleSubmit} />}
+            />
             <Route path="/mod" component={BoardModerator} />
             <Route path="/admin" component={BoardAdmin} />
           </Switch>

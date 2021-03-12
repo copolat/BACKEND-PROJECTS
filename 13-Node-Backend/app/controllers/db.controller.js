@@ -4,6 +4,7 @@ const Customer = require('../models/customer.model');
 
 exports.create = (req, res) => {
   // Validate request
+  console.log(req.body)
   if (!req.body.name) {
     res.status(400).send({ message: "Content can not be empty!" });
     return;

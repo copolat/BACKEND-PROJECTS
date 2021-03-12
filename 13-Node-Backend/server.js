@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const routerCustomer = require("./app/routers/db.routers");
+
 
 const app = express();
 
@@ -23,6 +25,7 @@ app.get("/", (req, res) => {
 require("./config/db.config");
 require('./app/routers/auth.routes')(app);
 require('./app/routers/user.routes')(app);
+app.use("/api/customers", routerCustomer);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8000;

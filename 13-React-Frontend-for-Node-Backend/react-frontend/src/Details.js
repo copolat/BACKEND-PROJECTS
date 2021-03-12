@@ -13,7 +13,7 @@ class Details extends React.Component {
     this.initialState = this.state;
   }
   componentDidMount(){
-    const { name, email, city, phone } = this.props.currentUser;
+    const { name, email, city, phone } = this.props.oneUser;
     this.setState({
       name: name,
       email: email,
@@ -40,8 +40,8 @@ class Details extends React.Component {
   };
 
   render() {
-    //console.log(this.props.currentUser)
-    const { name, email, city, phone } = this.props.currentUser;
+    //console.log(this.props.oneUser)
+    const { name, email, city, phone } = this.props.oneUser;
     return (
       <div className="container" style={{ width: "22rem" }}>
           <p>Update Staff</p>

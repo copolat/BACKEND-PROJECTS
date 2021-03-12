@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Form from "./Form";
+
 
 class Table extends Component {
   render() {
@@ -9,7 +9,6 @@ class Table extends Component {
     return (
       <div>
         <p>Add a character with a name and a job to the table.</p>
-        <Form handleSubmit={this.props.handleSubmit} />
         <div className="container-md" style={{ width: "55rem" }}>
           <table>
             <thead>
@@ -23,12 +22,12 @@ class Table extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.props.users.map((item, index) => {
+              {this.props.state.users.map((item, index) => {
                 return (
                   <tr key={index}>
                     <td>
                       <Link
-                        to={"/customer/" + item.id}
+                        to={"/home/" + item.id}
                         key={item.id}
                         onClick={() => this.props.getOneCustomer(item.id)}
                       >
@@ -40,12 +39,15 @@ class Table extends Component {
                     <td>{item.city}</td>
                     <td>{item.isActive ? "Active" : "Inactive"}</td>
                     <td>
+                      {this.props.state.showAdminBoard ? 
                       <button
-                        className="btn btn-remove"
-                        onClick={() => this.props.handleDelete(item.id)}
-                      >
-                        Delete
-                      </button>
+                      className="btn btn-remove"
+                      onClick={() => this.props.handleDelete(item.id)}
+                    >
+                      Delete
+                    </button> : ''
+                      }
+                      
                     </td>
 
                   </tr>
