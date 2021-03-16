@@ -156,7 +156,7 @@ class App extends Component {
               render={(props) => <Table {...props} state={this.state} getOneCustomer={this.getOneCustomer}/>}
             />
             <Route path="/home/:id" render={(props) => (
-                    <Details {...props} oneUser={this.state.oneUser}   getOneCustomer={this.getOneCustomer}/>
+                    <Details {...props} oneUser={this.state.oneUser}   state={this.state} getOneCustomer={this.getOneCustomer}/>
                     )} />
 
 

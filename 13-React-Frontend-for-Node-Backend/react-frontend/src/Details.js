@@ -80,7 +80,10 @@ class Details extends React.Component {
             defaultValue={city}
             onChange={this.handleChange}
           />
-          <button type="submit">Update</button>
+           {this.props.state.showAdminBoard ? 
+          <button type="submit">Update</button> : ''
+        }
+
         </form>
         <h2>
           {this.state.name
