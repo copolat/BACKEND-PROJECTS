@@ -61,6 +61,19 @@ class App extends Component {
       .then(data => this.setState({oneUser:data}))
       .catch(error => console.log(error.message))
   }
+  updateCustomer = (data, id) => {
+    console.log("updatecustomer çalıştı")
+    const url = `http://localhost:8000/api/customers/${id}`;
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    };
+    fetch(url,requestOptions)
+      .then(result => result.json())
+      .then(data => console.log(data))
+      .catch(error => console.log(error.message))
+  }
   
 
   handleSubmit = (data) => {
@@ -74,6 +87,19 @@ class App extends Component {
       .then(data => {console.error(data)
       this.getCustomer()})
       .catch(error => console.log(error.message))
+  }
+
+  handleDelete = (id) => {
+    console.log("handleDelete çalıştı")
+    const url = `http://localhost:8000/api/customers/${id}`;
+    const requestOptions = {
+      method: 'DELETE'
+    };
+    fetch(url, requestOptions)
+      .then(result => result.json())
+      .catch(error => console.log(error.message));
+
+    this.getCustomer()
   }
 
   render() {
@@ -153,10 +179,10 @@ class App extends Component {
             <Route
               exact
               path={["/", "/home"]}
-              render={(props) => <Table {...props} state={this.state} getOneCustomer={this.getOneCustomer}/>}
+              render={(props) => <Table {...props} state={this.state} getOneCustomer={this.getOneCustomer} handleDelete={this.handleDelete}/>}
             />
             <Route path="/home/:id" render={(props) => (
-                    <Details {...props} oneUser={this.state.oneUser}   state={this.state} getOneCustomer={this.getOneCustomer}/>
+                    <Details {...props} oneUser={this.state.oneUser}   state={this.state} getOneCustomer={this.getOneCustomer} updateCustomer={this.updateCustomer}/>
                     )} />
 
 
