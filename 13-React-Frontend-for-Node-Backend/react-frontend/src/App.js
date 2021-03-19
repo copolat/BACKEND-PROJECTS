@@ -6,6 +6,7 @@ import Table from './Table'
 import Details from './Details'
 
 import AuthService from "./services/auth.service";
+import CustomerService from "./services/customer.service";
 
 import Login from "./components/login.component";
 import Register from "./components/register.component";
@@ -46,10 +47,13 @@ class App extends Component {
     AuthService.logout();
   }
   getCustomer = () => {
-    const url = "http://localhost:8000/api/customers";
-    fetch(url)
-      .then((result) => result.json())
-      .then((data) => this.setState({ users: data }))
+    // Axios Use
+    //const url = "http://localhost:8000/api/customers";
+    // fetch(url)
+    //   .then((result) => result.json())
+    //.then((data) => this.setState({ users: data }))
+    CustomerService.getCustomers()
+      .then((result) => this.setState({ users: result.data }))
       .catch((error) => console.log(error.message));
   };
 
